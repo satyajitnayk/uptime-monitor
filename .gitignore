@@ -1,3 +1,8 @@
+.env
+
+# ignore any db file
+*.db
+
 # compiled output
 /dist
 /node_modules
