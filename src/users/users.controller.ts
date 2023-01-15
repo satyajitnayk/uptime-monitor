@@ -1,11 +1,14 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { User as UserModel } from '@prisma/client';
 import { UsersService } from './users.service';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   // TODO: We can remove this endpoint later on
   @Get()
@@ -20,7 +23,7 @@ export class UsersController {
     return data;
   }
 
-  @Post()
+  @Post('/signup')
   async createUser(
     @Body() userData: { email: string; password: string },
   ): Promise<any> {
@@ -39,5 +42,38 @@ export class UsersController {
     const { email: userEmail, userId, createdAt } = createdUser;
 
     return { email: userEmail, userId, createdAt };
+  }
+
+  @Post('/login')
+  async loginUser(
+    @Body() userData: { email: string; password: string },
+  ): Promise<any> {
+    //TODO: validate user input
+    // validate email & user eneterd password & check with exisitng hashed password
+    const { email, password } = userData;
+    const user = await this.userService.user({ email });
+    // TODO: return no user found
+    if (!user) {
+      return {
+        error: 'user not found',
+      };
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
+      // create jwt contaning userId & email as payload
+      const payload = { email: user.email, userId: user.userId };
+      return {
+        accessToken: this.jwtService.sign(payload, {
+          expiresIn: '30m',
+          secret: process.env.JWT_KEY,
+        }),
+      };
+    } else {
+      // TODO: action for no password match
+      return {
+        error: 'unable to authenticate user',
+      };
+    }
   }
 }
