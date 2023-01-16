@@ -48,4 +48,22 @@ export class TasksService {
       where: { urlId: { in: urlIdsToRun } },
     });
   }
+
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async handleUrlCleanUpCron() {
+    const allUrls = await this.prisma.url.findMany({});
+    const allPromises = [];
+    allUrls?.map((urldata) => {
+      const thresholdDate = moment()
+        .subtract(urldata.retentionInDays, 'd')
+        .format();
+      allPromises.push(
+        this.prisma.urlStatus.deleteMany({
+          where: { createdAt: { lt: thresholdDate } },
+        }),
+      );
+    });
+
+    await Promise.allSettled(allPromises);
+  }
 }
