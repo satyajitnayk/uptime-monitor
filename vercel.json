@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "env": { "DATABASE_URL": "@postgres_uri", "JWT_KEY": "@jwt_key" },
   "builds": [{ "src": "src/main.ts", "use": "@vercel/node" }],
   "routes": [
