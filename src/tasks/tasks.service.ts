@@ -19,7 +19,8 @@ export class TasksService {
     const currentTimestamp = moment();
     allUrls?.map((urldata) => {
       const { url, freqInMin, lastRun } = urldata;
-      const timeDiffInMinFromLastCall = currentTimestamp.diff(lastRun) / 60000;
+      const timeDiffInMinFromLastCall =
+        currentTimestamp.diff(moment(lastRun)) / 60000;
       if (timeDiffInMinFromLastCall >= freqInMin || !lastRun) {
         allPromises.push(axios.get(url));
         urlIdsToRun.push(urldata.urlId);
