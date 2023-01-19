@@ -4,6 +4,7 @@ export class UpdateURLDto {
   @IsNotEmpty()
   urlId: number;
 
-  @IsNotEmpty()
-  freqInMin: number;
+  freqInMin?: number | null;
+
+  retentionInDays?: number | null;
 }

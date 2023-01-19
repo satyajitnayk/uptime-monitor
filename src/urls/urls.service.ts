@@ -20,14 +20,19 @@ export class UrlsService {
     return this.prisma.url.create({ data });
   }
 
-  async updateFrequencyForURL(data: {
+  async updateURLConfiguration(data: {
     userId: number;
     urlId: number;
-    freqInMin: number;
+    freqInMin: number | null;
+    retentionInDays: number | null;
   }): Promise<Url | null> {
-    const { userId, urlId, freqInMin } = data;
+    const { userId, urlId, freqInMin, retentionInDays } = data;
+    const payload = {};
+    if (freqInMin) payload['freqInMin'] = freqInMin;
+    if (retentionInDays) payload['retentionInDays'] = retentionInDays;
+
     return this.prisma.url.update({
-      data: { freqInMin: freqInMin },
+      data: payload,
       where: {
         userId_urlId: {
           urlId,

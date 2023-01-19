@@ -52,17 +52,18 @@ export class UrlsController {
   }
 
   @Patch()
-  async updateConfiguredUrl(
+  async updateConfiguredUrlData(
     @Body() updateURLDto: UpdateURLDto,
     @Req() req: Request | any,
   ): Promise<any> {
     const userId = req.user.userId;
 
-    const { urlId, freqInMin } = updateURLDto;
-    const updatedUrl = await this.urlsService.updateFrequencyForURL({
+    const { urlId, freqInMin, retentionInDays } = updateURLDto;
+    const updatedUrl = await this.urlsService.updateURLConfiguration({
       userId,
       urlId,
       freqInMin,
+      retentionInDays,
     });
 
     return {
