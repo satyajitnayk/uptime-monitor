@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import axios from 'axios';
-import * as moment from 'moment';
+import moment from 'moment';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
