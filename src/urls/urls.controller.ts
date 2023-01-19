@@ -13,7 +13,7 @@ import { Request } from 'express';
 import { CreateURLDto } from './dto/create-url.dto';
 import { UpdateURLDto } from './dto/update-url.dto';
 import { DeleteURLDto } from './dto/delete-url.dto';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Controller('urls')
 export class UrlsController {
