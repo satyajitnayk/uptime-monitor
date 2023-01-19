@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -12,6 +13,7 @@ import { Request } from 'express';
 import { CreateURLDto } from './dto/create-url.dto';
 import { UpdateURLDto } from './dto/update-url.dto';
 import { DeleteURLDto } from './dto/delete-url.dto';
+import * as moment from 'moment';
 
 @Controller('urls')
 export class UrlsController {
@@ -98,6 +100,36 @@ export class UrlsController {
       statusCode: 200,
       data: deletedUrl,
       message: 'url deleted successfully',
+    };
+  }
+
+  @Get('/status/:urlId')
+  async getUrlStatus(
+    @Req() req: Request | any,
+    @Param('urlId') urlId,
+  ): Promise<any> {
+    const userId = req.user.userId;
+    urlId = parseInt(urlId);
+    const days = parseInt(req.query?.days ?? 5);
+    //check if url exists for the user
+    const url = await this.urlsService.findUrlById(urlId);
+    if (url == null || url.userId != userId) {
+      return {
+        statusCode: 400,
+        error: 'url does not exists',
+      };
+    }
+
+    const lastTimeStamp = moment().subtract(days, 'days').format();
+    const data = await this.urlsService.getUrlStatus({
+      urlId,
+      timeStamp: lastTimeStamp,
+    });
+
+    return {
+      statusCode: 200,
+      data: data,
+      message: 'successfully fetched status of url',
     };
   }
 }

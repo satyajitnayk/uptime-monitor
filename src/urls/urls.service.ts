@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { Prisma, Url } from '@prisma/client';
+import { Prisma, Url, UrlStatus } from '@prisma/client';
 
 @Injectable()
 export class UrlsService {
@@ -49,6 +49,13 @@ export class UrlsService {
     const { userId, urlId } = data;
     return this.prisma.url.delete({
       where: { userId_urlId: { urlId, userId } },
+    });
+  }
+
+  async getUrlStatus({ urlId, timeStamp }): Promise<any[]> {
+    return this.prisma.urlStatus.findMany({
+      where: { urlId: urlId, createdAt: { gte: timeStamp } },
+      orderBy: { createdAt: 'asc' },
     });
   }
 }
