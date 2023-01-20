@@ -7,7 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
+  app.enableCors({
+    allowedHeaders: ['content-type'],
+    origin: ['https://satyajitnayk.github.io'],
+    credentials: true,
+  });
   const config = new DocumentBuilder()
     .setTitle('API Documentation For Uptime Monitor')
     .setDescription('Public apis available to use')
