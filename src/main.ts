@@ -8,8 +8,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    allowedHeaders: ['content-type'],
-    origin: ['https://satyajitnayk.github.io'],
+    allowedHeaders: "*",
+    origin: "*",
     credentials: true,
   });
   const config = new DocumentBuilder()
