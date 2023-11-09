@@ -13,7 +13,7 @@ import { Request } from 'express';
 import { CreateURLDto } from './dto/create-url.dto';
 import { UpdateURLDto } from './dto/update-url.dto';
 import { DeleteURLDto } from './dto/delete-url.dto';
-import moment from 'moment';
+import * as moment from 'moment';
 
 @Controller('urls')
 export class UrlsController {
@@ -113,6 +113,7 @@ export class UrlsController {
     const days = parseInt(req.query?.days ?? 5);
     //check if url exists for the user
     const url = await this.urlsService.findUrlById(urlId);
+    console.log(url);
     if (url == null || url.userId != userId) {
       return {
         statusCode: 400,
