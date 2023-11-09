@@ -20,6 +20,8 @@ A simple and elegant URL uptime monitoring system built using Node.js and TypeSc
 4. Build the project: `npm run build`
 5. Start the server: `npm start`
 
+<img width="938" alt="image" src="https://github.com/satyajitnayk/uptime-monitor/assets/32722867/398f915b-2a9c-42ab-8583-630094c248c8">
+
 ## Usage
 
 1. Run the server: `npm start`

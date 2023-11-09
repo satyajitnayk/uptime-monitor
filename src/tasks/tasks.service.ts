@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import axios from 'axios';
-import moment from 'moment';
+import * as moment from 'moment';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -10,6 +10,11 @@ export class TasksService {
 
   @Cron(CronExpression.EVERY_MINUTE)
   async handleCron() {
+    console.log(
+      `****************CRON JOB RUN STARTED at ${moment().format(
+        'YYYY-MM-DD hh:mm:ss',
+      )}****************`,
+    );
     // fetch urls data from db every 1 min
     const allUrls = await this.prisma.url.findMany({});
 
@@ -48,10 +53,20 @@ export class TasksService {
       data: { lastRun: moment(currentTimestamp).format() },
       where: { urlId: { in: urlIdsToRun } },
     });
+    console.log(
+      `****************CRON JOB RUN ENDED at ${moment().format(
+        'YYYY-MM-DD hh:mm:ss',
+      )}****************`,
+    );
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_1AM)
   async handleUrlCleanUpCron() {
+    console.log(
+      `****************CRON JOB CLEANUP SERVICE STARTED at ${moment().format(
+        'YYYY-MM-DD hh:mm:ss',
+      )}****************`,
+    );
     const allUrls = await this.prisma.url.findMany({});
     const allPromises = [];
     allUrls?.map((urldata) => {
@@ -66,5 +81,10 @@ export class TasksService {
     });
 
     await Promise.allSettled(allPromises);
+    console.log(
+      `****************CRON JOB CLEANUP SERVICE ENDED at ${moment().format(
+        'YYYY-MM-DD hh:mm:ss',
+      )}****************`,
+    );
   }
 }
